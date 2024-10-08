@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Machine learning model files
+spam_classifier_model.pkl
+tfidf-vectorizer.pkl
+
+# Credentials
+credentials.json
+
+# CSV file with emails
+emailsss.csv
+
+
