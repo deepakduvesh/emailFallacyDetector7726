@@ -19,7 +19,8 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
           'https://www.googleapis.com/auth/drive.metadata.readonly']
 
 # Redirect URI for OAuth flow
-REDIRECT_URI = 'http://localhost:5000/oauth2callback'  # Ensure this matches Google Cloud Console
+# REDIRECT_URI = 'http://localhost:5000/oauth2callback'  # Ensure this matches Google Cloud Console
+REDIRECT_URI = 'https://emailfallacydetector7726.onrender.com/oauth2callback'  # Ensure this matches Google Cloud Console
 
 # Google API settings
 API_SERVICE_NAME = 'gmail'
