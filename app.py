@@ -139,4 +139,4 @@ def credentials_to_dict(credentials):
 
 # Run Flask app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(PORT = 5000, debug=True)
