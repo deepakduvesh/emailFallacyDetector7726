@@ -1,4 +1,6 @@
 import os
+import json
+import tempfile
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
@@ -11,8 +13,31 @@ from classifier import classify_email
 app = Flask(__name__)
 app.secret_key = '131313'  # Required to keep session secure
 
+
+google_client_id = os.getenv("GOOGLE_CLIENT_ID")
+google_project_id = os.getenv("GOOGLE_PROJECT_ID")
+google_auth_uri = os.getenv("GOOGLE_AUTH_URI")
+google_token_uri = os.getenv("GOOGLE_TOKEN_URI")
+google_auth_provider_cert_url = os.getenv("GOOGLE_AUTH_PROVIDER_CERT_URL")
+google_client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
+google_redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
+
+
+
 # OAuth 2.0 Client ID and Secret
-CLIENT_SECRETS_FILE = "credentials.json"  # Downloaded from Google Cloud Console
+CLIENT_SECRETS_FILE =  {
+    "web": {
+      "client_id": "425617206737-3ug0ij0vfm51lq119j3sq0adtgrv5h56.apps.googleusercontent.com",
+      "project_id": "emailfallacydetector",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_secret": "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",
+      "redirect_uris": [
+        "https://emailfallacydetector7726.onrender.com/oauth2callback"
+      ]
+    }
+  }
 
 # OAuth 2.0 scopes
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
@@ -35,9 +60,14 @@ def index():
 # Authorize route: Start the OAuth flow
 @app.route('/authorize')
 def authorize():
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.json',mode ='w') as tmp:
+        json.dump(CLIENT_SECRETS_FILE, tmp)
+        tmp_path = tmp.name
+
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, scopes=SCOPES)
+        tmp_path, scopes=SCOPES)
 
     # Set the redirect URI for the authorization response
     flow.redirect_uri = url_for('oauth2callback', _external=True)
@@ -61,10 +91,14 @@ def oauth2callback():
 
     if not state:
         return 'Error: State not found in session. Please try again.'
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.json',mode ='w') as tmp:
+        json.dump(CLIENT_SECRETS_FILE, tmp)
+        tmp_path = tmp.name
 
     # Recreate the flow instance to continue the OAuth flow
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+        tmp_path, scopes=SCOPES, state=state)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
 
     # Exchange the authorization code for access token
