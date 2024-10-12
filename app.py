@@ -27,14 +27,14 @@ google_redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
 # OAuth 2.0 Client ID and Secret
 CLIENT_SECRETS_FILE =  {
     "web": {
-      "client_id": "425617206737-3ug0ij0vfm51lq119j3sq0adtgrv5h56.apps.googleusercontent.com",
-      "project_id": "emailfallacydetector",
-      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-      "token_uri": "https://oauth2.googleapis.com/token",
-      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-      "client_secret": "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",
+      "client_id": google_client_id,
+      "project_id": google_project_id,
+      "auth_uri": google_auth_uri,
+      "token_uri": google_token_uri,
+      "auth_provider_x509_cert_url": google_auth_provider_cert_url,
+      "client_secret": google_client_secret,
       "redirect_uris": [
-        "https://emailfallacydetector7726.onrender.com/oauth2callback"
+        google_redirect_uri
       ]
     }
   }
@@ -44,8 +44,7 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
           'https://www.googleapis.com/auth/drive.metadata.readonly']
 
 # Redirect URI for OAuth flow
-# REDIRECT_URI = 'http://localhost:5000/oauth2callback'  # Ensure this matches Google Cloud Console
-REDIRECT_URI = 'https://emailfallacydetector7726.onrender.com/oauth2callback'  # Ensure this matches Google Cloud Console
+REDIRECT_URI = google_redirect_uri
 
 # Google API settings
 API_SERVICE_NAME = 'gmail'
